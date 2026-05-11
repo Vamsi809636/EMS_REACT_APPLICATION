@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + TypeScript + Vite 
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -71,3 +72,7 @@ export default defineConfig([
   },
 ])
 ```
+=======
+# EMS_REACT_APPLICATION
+Employee Management System built using React.js for the frontend and Spring Boot for the backend. The application provides complete CRUD operations for managing employees and departments, RESTful API integration, responsive UI design, pagination, validation, and seamless frontend-backend communication for efficient workforce management.
+>>>>>>> 77c8d2c73cd7bfc69e37dfd184ffa99bcf3670c7
