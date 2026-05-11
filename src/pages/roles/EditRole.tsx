@@ -1,0 +1,34 @@
+import { useEffect, useState } from 'react';
+import { roleApi } from '../../api/roleApi';
+import RoleForm from '../../components/role/RoleForm';
+import Loader from '../../components/common/Loader';
+import DashboardLayout from '../../components/layout/DashboardLayout';
+import { navigate } from '../../routes/AppRoutes';
+import type { Role, RoleRequest } from '../../types/role.types';
+
+const EditRole = ({ id }: { id: string }) => {
+  const [role, setRole] = useState<Role | null>(null);
+
+  useEffect(() => {
+    roleApi.getById(id).then(setRole);
+  }, [id]);
+
+  const submit = async (payload: RoleRequest) => {
+    await roleApi.update(id, payload);
+    navigate('/roles');
+  };
+
+  return (
+    <DashboardLayout>
+      <section className="page-header">
+        <h1>Edit Role</h1>
+        <button className="btn btn-back" type="button" onClick={() => navigate('/roles')}>
+          Back
+        </button>
+      </section>
+      {role ? <RoleForm initialValue={role} onSubmit={submit} /> : <Loader />}
+    </DashboardLayout>
+  );
+};
+
+export default EditRole;
