@@ -1,16 +1,30 @@
 import { apiRequest } from './axiosConfig';
 import type { Employee, EmployeeRequest, PageResponse } from '../types/employee.types';
 
+
 export const employeeApi = {
-  getAll: (page = 0, size = 25) =>
+  getAllEmployees: (page = 0, size = 25) =>
     apiRequest<PageResponse<Employee>>(`/employees?page=${page}&size=${size}&sort=lastName,asc`),
-  search: (name: string) => apiRequest<Employee[]>(`/employees/search?name=${encodeURIComponent(name)}`),
+  getEmployeeByName: async (name: string) => {
+  const encodedName = encodeURIComponent(name.trim());
+
+  const data = await apiRequest<Employee[]>(
+    `/employees/search?name=${encodedName}`
+  );
+
+  return data;
+},
+  getEmployeeById: (id: string) => apiRequest<Employee>(`/employees/${id}`),
+  
+  deleteById: (id: string) => apiRequest<void>(`/employees/${id}`, { method: 'DELETE' }),
+  getAll: (page = 0, size = 25) => employeeApi.getAllEmployees(page, size),
+  search: (name: string) => employeeApi.getEmployeeByName(name),
   getByDepartment: (departmentId: string) =>
     apiRequest<Employee[]>(`/employees/department/${departmentId}`),
-  getById: (id: string) => apiRequest<Employee>(`/employees/${id}`),
+  getById: (id: string) => employeeApi.getEmployeeById(id),
   create: (payload: EmployeeRequest) =>
     apiRequest<Employee>('/employees', { method: 'POST', body: payload }),
   update: (id: string, payload: EmployeeRequest) =>
     apiRequest<Employee>(`/employees/${id}`, { method: 'PUT', body: payload }),
-  remove: (id: string) => apiRequest<void>(`/employees/${id}`, { method: 'DELETE' }),
+  remove: (id: string) => employeeApi.deleteById(id),
 };
