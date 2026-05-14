@@ -2,15 +2,8 @@ import { departmentApi } from '../api/departmentApi';
 import type { DepartmentRequest } from '../types/department.types';
 
 export const departmentService = {
-  getDepartments: () => departmentApi.getAll(),
+  getDepartments: () => departmentApi.getAllDepartments(),
 
-  getDepartmentById: (id: string) => {
-    if (!id.trim()) {
-      throw new Error('Department ID is required');
-    }
-
-    return departmentApi.getById(id.trim());
-  },
 
   createDepartment: (data: DepartmentRequest) => {
     const payload = {
