@@ -1,5 +1,5 @@
 import Button from '../common/Button';
-import { formatDate } from '../../utils/formatDate';
+
 import type { Employee } from '../../types/employee.types';
 
 interface Props {
@@ -8,30 +8,22 @@ interface Props {
 }
 
 const EmployeeTable = ({ employees, onDelete }: Props) => (
-  <div className="table-wrap">
+  <div className="table-wrap employee-table-wrap">
     <table>
       <thead>
         <tr>
           
           <th>Name</th>
-          <th>Email</th>
-          <th>Department</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Hire Date</th>
+          
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {employees.map((employee) => (
           <tr key={employee.id}>
-            <td>{employee.fullName || `${employee.firstName} ${employee.lastName}`}</td>
-            <td>{employee.email}</td>
-            <td>{employee.departmentName || '-'}</td>
-            <td>{employee.roleName || '-'}</td>
-            <td><span className="status-pill">{employee.status}</span></td>
-            <td>{formatDate(employee.hireDate)}</td>
-            <td className="actions">
+            <td data-label="Name">{employee.fullName || `${employee.firstName} ${employee.lastName}`}</td>
+           
+            <td className="actions" data-label="Actions">
               <a className="link-button" href={`/employees/${employee.id}`}>
                 View
               </a>
