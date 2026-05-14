@@ -3,31 +3,32 @@ import type { Role } from '../../types/role.types';
 
 interface Props {
   roles: Role[];
-  onDelete: (id: string) => void;
+  onDelete: (name: string) => void;
 }
 
 const RoleTable = ({ roles, onDelete }: Props) => (
-  <div className="table-wrap">
+  <div className="table-wrap role-table-wrap">
     <table>
       <thead>
         <tr>
           <th>Name</th>
-          <th>Level</th>
-          <th>Description</th>
+         
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {roles.map((role) => (
           <tr key={role.id}>
-            <td>{role.name}</td>
-            <td>{role.level}</td>
-            <td>{role.description || '-'}</td>
-            <td className="actions">
+            <td data-label="Name">{role.name}</td>
+            
+            <td className="actions" data-label="Actions">
+              <a className="link-button" href={`/roles/${role.id}`}>
+                View
+              </a>
               <a className="link-button" href={`/roles/${role.id}/edit`}>
                 Edit
               </a>
-              <Button type="button" variant="danger" onClick={() => onDelete(role.id)}>
+              <Button type="button" variant="danger" onClick={() => onDelete(role.name)}>
                 Delete
               </Button>
             </td>
