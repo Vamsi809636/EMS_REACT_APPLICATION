@@ -10,6 +10,9 @@ export const employeeService = {
   getById: (id: string) => {
     return apiClient.get(`/employees/${id}`);
   },
+   getByName: (name: string) => {
+    return apiClient.get(`/employees/${name}`);
+  },
 
   create: (data: any) => {
     return apiClient.post('/employees', data);
