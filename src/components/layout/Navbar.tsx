@@ -1,38 +1,64 @@
 import { navigate } from '../../routes/AppRoutes';
 import { useAuth } from '../../hooks/useAuth';
+import { useState } from 'react';
 
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const goTo = (event: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    event.preventDefault();
+    setMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleLogout = () => {
+    setMenuOpen(false);
+    logout();
+  };
 
   return (
     <nav className="navbar">
-      <a className="brand" href="/" onClick={(event) => route(event, '/')}>
+      <a className="brand" href="/" onClick={(event) => goTo(event, '/')}>
         <img className="brand-logo" src="/ibm-logo.png" alt="IBM" />
+        <span>EMS Portal</span>
       </a>
 
-      <div className="nav-links">
+      <button
+        className="nav-menu-toggle"
+        type="button"
+        aria-expanded={menuOpen}
+        aria-controls="primary-navigation"
+        onClick={() => setMenuOpen((current) => !current)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      <div id="primary-navigation" className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
         {!isAuthenticated ? (
           <>
-            <a href="/login" onClick={(event) => route(event, '/login')}>
+            <a href="/login" onClick={(event) => goTo(event, '/login')}>
               Login
             </a>
           </>
         ) : (
           <>
-            <a href="/employees" onClick={(event) => route(event, '/employees')}>
+            <a href="/employees" onClick={(event) => goTo(event, '/employees')}>
               Employees
             </a>
-            <a href="/departments" onClick={(event) => route(event, '/departments')}>
+            <a href="/departments" onClick={(event) => goTo(event, '/departments')}>
               Departments
             </a>
-            <a href="/projects" onClick={(event) => route(event, '/projects')}>
+            <a href="/projects" onClick={(event) => goTo(event, '/projects')}>
               Projects
             </a>
-            <a href="/roles" onClick={(event) => route(event, '/roles')}>
+            <a href="/roles" onClick={(event) => goTo(event, '/roles')}>
               Roles
             </a>
-            <button type="button" onClick={logout}>
+            <button type="button" onClick={handleLogout}>
               Logout
             </button>
           </>
@@ -40,11 +66,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
-
-const route = (event: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-  event.preventDefault();
-  navigate(path);
 };
 
 export default Navbar;
