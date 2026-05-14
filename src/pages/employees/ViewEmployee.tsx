@@ -14,8 +14,11 @@ const ViewEmployee = ({ id }: { id: string }) => {
     setError('');
     setEmployee(null);
     employeeApi
-      .getById(id)
-      .then(setEmployee)
+      .getEmployeeById(id)
+      .then((data) => {
+        setEmployee(data);
+        console.log('Employee Data Retrieved Successfully');
+      })
       .catch((err) => {
         setError(err instanceof Error ? err.message : 'Unable to load employee details');
       });
