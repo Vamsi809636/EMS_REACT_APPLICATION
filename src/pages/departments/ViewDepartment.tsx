@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { departmentApi } from '../../api/departmentApi';
+import { useState } from 'react';
 import DepartmentDetails from '../../components/department/DepartmentDetails';
 import Loader from '../../components/common/Loader';
 import DashboardLayout from '../../components/layout/DashboardLayout';
@@ -7,22 +6,10 @@ import { navigate } from '../../routes/AppRoutes';
 import type { Department } from '../../types/department.types';
 
 const ViewDepartment = ({ id }: { id: string }) => {
-  const [department, setDepartment] = useState<Department | null>(null);
-  const [error, setError] = useState('');
+  const [department] = useState<Department | null>(null);
+  const [error] = useState('');
 
-  useEffect(() => {
-    setError('');
-    setDepartment(null);
-    departmentApi
-      .getById(id)
-      .then((data) => {
-        setDepartment(data);
-        console.log('Department Data Retrieved Successfully');
-      })
-      .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Unable to load department details');
-      });
-  }, [id]);
+  
 
   return (
     <DashboardLayout>
