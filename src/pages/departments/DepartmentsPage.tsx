@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { departmentApi } from '../../api/departmentApi';
 import DepartmentTable from '../../components/department/DepartmentTable';
 import Loader from '../../components/common/Loader';
+import Modal from '../../components/common/Modal';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import type { Department } from '../../types/department.types';
 
@@ -12,10 +13,11 @@ const DepartmentsPage = () => {
   const [hasSearched, setHasSearched] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
 
   const load = async () => {
     setLoading(true);
-    setDepartments(await departmentApi.getAll());
+    setDepartments(await departmentApi.getAllDepartments());
     setLoading(false);
   };
 
@@ -39,8 +41,9 @@ const DepartmentsPage = () => {
     setHasSearched(true);
 
     try {
-      const department = await departmentApi.getByName(name);
+      const department = await departmentApi.getDepartmentByName(name);
       setMatchedDepartments([department]);
+      console.log('Department Data Retrieved Successfully');
     } catch (err) {
       setMatchedDepartments([]);
       setError(
@@ -58,12 +61,17 @@ const DepartmentsPage = () => {
     setError('');
   };
 
-  const remove = async (id: string) => {
+  const remove = async (name: string) => {
     if (!confirm('Delete this department?')) return;
 
     try {
-      await departmentApi.remove(id);
+      await departmentApi.deleteDepartmentByName(name);
+      console.log('Department Deleted Successfully');
       await load();
+      setMatchedDepartments((current) =>
+        current.filter((department) => department.name !== name)
+      );
+      setShowDeleteSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed');
     }
@@ -77,7 +85,7 @@ const DepartmentsPage = () => {
           <p>Maintain organization departments.</p>
         </div>
 
-        <a className="btn btn-primary" href="/departments/new">
+        <a className="btn btn-primary btn-add" href="/departments/new">
           Add Department
         </a>
       </section>
@@ -132,6 +140,13 @@ const DepartmentsPage = () => {
           onDelete={remove}
         />
       )}
+      <Modal
+        open={showDeleteSuccess}
+        title="Department Deleted Successfully"
+        onClose={() => setShowDeleteSuccess(false)}
+      >
+        <p className="modal-message">The department record has been removed.</p>
+      </Modal>
     </DashboardLayout>
   );
 };
