@@ -3,8 +3,25 @@ import type { Employee } from '../types/employee.types';
 import type { AssignEmployeeRequest, Project, ProjectRequest, ProjectStatus } from '../types/project.types';
 
 export const projectApi = {
-  getAll: (status?: ProjectStatus | '') =>
+  getAllProjects: (status?: ProjectStatus | '') =>
     apiRequest<Project[]>(status ? `/projects?status=${status}` : '/projects'),
+  getProjectByName: async (name: string) => {
+    const projects = await projectApi.getAllProjects();
+    const project = projects.find(
+      (item) => item.name.toLowerCase() === name.trim().toLowerCase()
+    );
+
+    if (!project) {
+      throw new Error('No project found with that name');
+    }
+
+    return project;
+  },
+  deleteProjectByName: async (name: string) => {
+    const project = await projectApi.getProjectByName(name);
+    return apiRequest<void>(`/projects/${project.id}`, { method: 'DELETE' });
+  },
+  getAll: (status?: ProjectStatus | '') => projectApi.getAllProjects(status),
   getById: (id: string) => apiRequest<Project>(`/projects/${id}`),
   create: (payload: ProjectRequest) =>
     apiRequest<Project>('/projects', { method: 'POST', body: payload }),
@@ -19,3 +36,4 @@ export const projectApi = {
   getEmployeeProjects: (employeeId: string) =>
     apiRequest<Project[]>(`/projects/employee/${employeeId}`),
 };
+
