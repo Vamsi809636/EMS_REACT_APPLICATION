@@ -14,10 +14,11 @@ const Modal = ({ open, title, children, onClose }: ModalProps) => {
   return (
     <div className="modal-backdrop">
       <section className="modal" role="dialog" aria-modal="true" aria-label={title}>
+        <span className="modal-status-icon" aria-hidden="true" />
         <div className="modal-header">
           <h2>{title}</h2>
           <Button type="button" variant="secondary" onClick={onClose}>
-            Close
+            OK
           </Button>
         </div>
         {children}
